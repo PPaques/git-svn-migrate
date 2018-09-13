@@ -1,4 +1,5 @@
-albin	file:///svn/Albin
-awesomeProject	svn+ssh://example.org/svn/awesomeProject/repo
-notSoEvilProject	https://example.com/svn/evilestProjectEver
-file:///svn/secretProject
+  svn+ssh://example.org/svn/awesomeProject/repo awesomeProject --stdlayout
+  file:///svn/evilProject evilproject --stdlayout
+  https://example.com/svn/secretProject notthedroidsyourlookingfor --stdlayout
+  http://example.com/svn/standardProject  standardProject --stdlayout
+  http://example.com/svn/weirdWays  weird_huh --trunk=head
