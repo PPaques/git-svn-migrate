@@ -175,7 +175,7 @@ if [[ -e $tmp_destination ]]; then
   echo "Temporary repository location \"$tmp_destination\" already exists. Exiting." >&2;
   exit 1;
 fi
-while read line
+sed -e 's/#.*//; /^[[:space:]]*$/d' $url_file | while read line
 do
   # Check for 2-field format:  Name [tab] URL
   url=`echo $line | awk '{print $1}'`;
@@ -244,4 +244,4 @@ do
   done
 
   echo "- Conversion completed at $(date)." >&2;
-done < $url_file
+done
