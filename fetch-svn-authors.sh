@@ -122,7 +122,7 @@ fi
 
 # Process each URL in the repository list.
 tmp_file="tmp-authors-transform.txt";
-while read line
+sed -e 's/#.*//; /^[[:space:]]*$/d' $url_file | while read line
 do
   # Check for 2-field format:  Name [tab] URL
   name=`echo $line | awk '{print $1}'`;
@@ -137,7 +137,7 @@ do
   /bin/echo -n "  " >&2;
   svn log -q $url | awk -F '|' '/^r/ {sub("^ ", "", $2); sub(" $", "", $2); print $2" = "$2" <"$2">"}' | sort -u >> $tmp_file;
   echo "Done." >&2;
-done < $url_file
+done
 
 # Process temp file one last time to show results.
 if [[ $destination == '' ]]; then
