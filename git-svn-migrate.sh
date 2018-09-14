@@ -178,10 +178,9 @@ fi
 sed -e 's/#.*//; /^[[:space:]]*$/d' $url_file | while read line
 do
   # Check for 2-field format:  Name [tab] URL
-  echo $line
   url=`echo $line | awk '{print $1}'`;
   name=`echo $line | awk '{print $2}'`;
-  extra_args=`echo $line | awk '{ORS=" "; for (y=3; y<=NF; y++) print $y}'`;
+  extra_args=`echo $line | awk '{ORS=" "; for (y=4; y<=NF; y++) print $y}'`;
   # Check for simple 1-field format:  URL
   if [[ $name == '' ]]; then
     name=`basename $url`;
@@ -200,7 +199,7 @@ do
   # Clone the original Subversion repository to a temp repository.
   cd $pwd;
   echo "- Cloning repository..." >&2;
-  git svn clone $url -A $authors_file --authors-prog=$dir/svn-lookup-author.sh --quiet $gitsvn_params $extra_args $tmp_destination;
+  git svn clone $url -A $authors_file --authors-prog=$dir/svn-lookup-author.sh $gitsvn_params $extra_args $tmp_destination;
 
   # Create .gitignore file.
   echo "- Converting svn:ignore properties into a .gitignore file..." >&2;
@@ -211,7 +210,7 @@ do
   git svn show-ignore --id trunk >> .gitignore;
   if [ -s .gitignore ]; then
     git add .gitignore;
-    git commit --author="git-svn-migrate <nobody@example.org>" -m 'Convert svn:ignore properties to .gitignore.';
+    git commit -m 'Convert svn:ignore properties to .gitignore.';
   fi
 
   # Push to final bare repository and remove temp repository.

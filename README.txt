@@ -56,8 +56,20 @@ example above, we're using the second-to-last part of the URL instead of the
 last part of the URL. In the second example, we're just changing the name to all
 lowercase (recommended). And in the final example, move along. Move along.
 
+In the third field, you have to specify the folder in where the repository will
+be merged. This allow to make a mono repo with several repositories while keeping 
+history. Special characters:
+    `-` Ignore the repository
+    `/` root repository
+
+example:
+  http://example.com/svn/standardProject  standardProject / --stdlayout
+  http://example.com/svn/lib/git-tools  gittools lib/gittools --trunk=head
+The project gittools will be included inside standardProject in lib/gittools folder. 
+
+
 If your repository is in a standaed (trunk/branches/tags) layout, you may add
---stdlayout as the third field. If you have a non-standard layout, or wish to
+--stdlayout as the fourth field. If you have a non-standard layout, or wish to
 pass extra arguments to git-svn on a per-repository basis, you may add them as
 subsequent fields:
   http://example.com/svn/standardProject  standardProject --stdlayout
@@ -119,3 +131,8 @@ LICENSE
 -------
 
 Available under the GPL v2 license. See LICENSE.txt.
+
+TODO: CleanUp
+---------
+clean from svn tags : http://chrisdail.com/2011/05/24/migrating-to-git-from-subversion/
+Fusion of directories: https://gofore.com/merge-multiple-git-repositories-one-retaining-history/

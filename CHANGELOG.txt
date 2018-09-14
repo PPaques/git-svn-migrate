@@ -1,3 +1,9 @@
+Version 2.0
+-----------
+- Add comments to url file (changeset from: TODO and duplicated in fetch-svn-authors.sh by Pierre Paques) 
+- Add git-svn option in url file (changeset from: TODO and duplicated in by fetch-svn-authors.sh Pierre Paques)
+- add git svn merge in url file (Pierre Paques)
+\
 Version 1.x
 -----------
 - Add option to make shared git repositories

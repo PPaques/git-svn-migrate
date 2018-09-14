@@ -1,6 +1,13 @@
-  svn+ssh://example.org/svn/awesomeProject/repo awesomeProject --stdlayout
-  file:///svn/evilProject evilproject --stdlayout
-  https://example.com/svn/secretProject notthedroidsyourlookingfor --stdlayout
-  http://example.com/svn/standardProject  standardProject --stdlayout
-  # this is a comment
-  http://example.com/svn/weirdWays  weird_huh --trunk=head
+  # this repository can be merged using git-merge.sh. it will be namespaced by url
+  # in this file you have to specify
+  #
+  # Url of the svn repository						name_of_repo 		Target_folder_in_merge		options_for_git_svn_clone
+  svn+ssh://example.org/svn/awesomeProject/repo 	awesomeProject 		/							--stdlayout
+  file:///svn/evilProject 							evilproject 		/evil						--stdlayout
+
+  # ignored repository during the merge
+  https://example.com/svn/secretProject 			notthedroids		- 							--stdlayout
+  http://example.com/svn/standardProject 			standardProject 	-							--stdlayout
+  
+  # custom trunk position in the repo
+  http://example.com/svn/weirdWays  				weird_huh 			-							--trunk=head
