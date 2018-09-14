@@ -172,12 +172,13 @@ destination=`cd $destination; pwd`; #Absolute path.
 
 # Ensure temporary repository location is empty.
 if [[ -e $tmp_destination ]]; then
-  echo "Temporary repository location \"$tmp_destination\" already exists. Exiting." >&2;
-  exit 1;
+  echo "Temporary repository location \"$tmp_destination\" already exists. Cleaning it." >&2;
+  rm -rf $tmp_destination
 fi
 sed -e 's/#.*//; /^[[:space:]]*$/d' $url_file | while read line
 do
   # Check for 2-field format:  Name [tab] URL
+  echo $line
   url=`echo $line | awk '{print $1}'`;
   name=`echo $line | awk '{print $2}'`;
   extra_args=`echo $line | awk '{ORS=" "; for (y=3; y<=NF; y++) print $y}'`;
@@ -242,6 +243,5 @@ do
     git tag -a "$ref" -m "Convert \"$ref\" to a proper git tag." "refs/heads/tags/$ref";
     git branch -D "tags/$ref";
   done
-
   echo "- Conversion completed at $(date)." >&2;
 done
