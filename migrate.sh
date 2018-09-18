@@ -41,7 +41,7 @@ folder_sync_destination="$pwd/svn-sync"
 
 if [ -f $file_fetcher ]; then
   echo "svn repositories list to fetch locally detected. Running it"
-  run ./svn_sync.sh --url-file $file_sync --destination $folder_sync_destination
+  run ./svn-sync.sh --url-file $file_sync --destination $folder_sync_destination
 fi
 
 
