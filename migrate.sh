@@ -41,7 +41,7 @@ folder_sync_destination="$pwd/svn-sync"
 
 if [ -f $file_fetcher ]; then
   echo "svn repositories list to fetch locally detected. Running it"
-  run ./svn-sync.sh --url-file $file_sync --destination $folder_sync_destination
+  # run ./svn-sync.sh --url-file $file_sync --destination $folder_sync_destination
 fi
 
 
@@ -69,5 +69,57 @@ fi
 
 
 folder_base_convertion="$pwd/bare-git"
-run ./git-svn-migrate.sh --url-file $file_repositories --destination $folder_base_convertion --authors-file $file_authors
+#run ./git-svn-migrate.sh --url-file $file_repositories --destination $folder_base_convertion --authors-file $file_authors
 
+file_actions_before_merge="$pwd/repositories-actions-before-merge.txt"
+if [ ! -f $file_actions_before_merge ]; then
+  echo "No before-merge-actions, create a dummy file from repositories-list.txt"
+
+  sed -e 's/#.*//; /^[[:space:]]*$/d' $file_repositories | while read line
+  do
+    # Check for 2-field format:  Name [tab] URL
+    url=`echo $line | awk '{print $1}'`;
+    name=`echo $line | awk '{print $2}'`;
+    printf "$name\tgit status\n" >> $file_actions_before_merge
+    # Check for simple 1-field format:  URL
+  done
+fi
+
+echo "run pre-merge cleaning operation"
+folder_pre_merge="$pwd/pre-merge-git"
+run ./git-actions.sh --url-file $file_actions_before_merge --from $folder_base_convertion --destination $folder_pre_merge
+
+
+file_repositories_merge="$pwd/repositories-list-merge.txt"
+if [ ! -f $file_repositories_merge ]; then
+  echo "No merging rules. Conversion is finished"
+  exit 0
+fi
+
+echo "Merging repositories into a central repository according to the config"
+folder_merge="$pwd/merge-git"
+run ./git-merge.sh --url-file $file_repositories_merge --from $folder_pre_merge --destination $folder_merge
+
+
+file_actions_after_merge="$pwd/repositories-actions-after-merge.txt"
+if [ ! -f $file_actions_after_merge ]; then
+  echo "No after-merge-actions, create a dummy file from repositories-list.txt"
+
+  sed -e 's/#.*//; /^[[:space:]]*$/d' $file_repositories | while read line
+  do
+    # Check for 2-field format:  Name [tab] URL
+    name=`echo $line | awk '{print $1}'`;
+    target=`echo $line | awk '{print $2}'`;
+
+    if [[ target == "/" ]]; then
+      #statements
+      printf "$name\tgit gc\n" >> $file_actions_after_merge
+
+    fi
+    # Check for simple 1-field format:  URL
+  done
+fi
+
+echo "run after-merge cleaning operation"
+folder_after_merge="$pwd/final-git"
+run ./git-actions.sh --url-file $file_actions_after_merge --from $folder_merge --destination $folder_after_merge
