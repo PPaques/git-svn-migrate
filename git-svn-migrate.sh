@@ -199,12 +199,14 @@ do
 		if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
 		then
 			rm -rf $destination_dir
+			rm -rf $tmp_destination
 		else
+			rm -rf $tmp_destination
 			continue
 		fi
 	fi
 
-	mkdir $destination_dir;
+	mkdir -p $destination_dir;
 	cd $destination_dir;
 	git init --bare $gitinit_params;
 	git symbolic-ref HEAD refs/heads/trunk;
@@ -223,7 +225,7 @@ do
 	git svn show-ignore --id trunk >> .gitignore;
 	if [ -s .gitignore ]; then
 		git add .gitignore;
-		git commit -m 'Convert svn:ignore properties to .gitignore.';
+		git commit -m 'Convert svn:ignore properties to .gitignore. for $name';
 	fi
 
 	# Push to final bare repository and remove temp repository.
