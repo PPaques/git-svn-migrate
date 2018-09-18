@@ -1,3 +1,4 @@
-svn_sync/*
+svn-sync/*
+bare-git/*
 repositories*.txt
 authors-*.txt
