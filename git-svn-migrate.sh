@@ -180,7 +180,7 @@ do
 	# Check for 2-field format:  Name [tab] URL
 	url=`echo $line | awk '{print $1}'`;
 	name=`echo $line | awk '{print $2}'`;
-	extra_args=`echo $line | awk '{ORS=" "; for (y=4; y<=NF; y++) print $y}'`;
+	extra_args=`echo $line | awk '{ORS=" "; for (y=3; y<=NF; y++) print $y}'`;
 	# Check for simple 1-field format:  URL
 	if [[ $name == '' ]]; then
 		name=`basename $url`;

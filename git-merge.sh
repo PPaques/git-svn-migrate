@@ -163,15 +163,9 @@ echo "First Pass: copy bare repositories inside the temp folder then rewrite his
 sed -e 's/#.*//; /^[[:space:]]*$/d' $url_file | while read line
 do
 	# Check for 2-field format:  Name [tab] URL
-	url=`echo $line | awk '{print $1}'`;
-	name=`echo $line | awk '{print $2}'`;
-	target=`echo $line | awk '{print $3}'`;
-	extra_args=`echo $line | awk '{ORS=" "; for (y=4; y<=NF; y++) print $y}'`;
+	name=`echo $line | awk '{print $1}'`;
+	target=`echo $line | awk '{print $2}'`;
 	
-	# Check for simple 1-field format:  URL
-	if [[ $name == '' ]]; then
-		name=`basename $url`;
-	fi
 	
 	# Process each Subversion URL.
 	echo >&2;
