@@ -191,8 +191,21 @@ do
 	echo "Processing \"$name\" repository at $url..." >&2;
 
 	# Init the final bare repository.
-	mkdir $destination/$name.git;
-	cd $destination/$name.git;
+	destination_dir=$destination/$name.git
+	# check if destination exists 
+	if [ -d "$destination_dir" ]; then
+		echo "repository $name.git exists in target folder." ;
+		read -p "Are you sure to erase it and migrate it?  [y/n] " prompt </dev/tty
+		if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
+		then
+			rm -rf $destination_dir
+		else
+			continue
+		fi
+	fi
+
+	mkdir $destination_dir;
+	cd $destination_dir;
 	git init --bare $gitinit_params;
 	git symbolic-ref HEAD refs/heads/trunk;
 
