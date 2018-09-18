@@ -139,6 +139,11 @@ run()
 
 # Process each URL in the repository list.
 pwd=`pwd`;
+
+if [ ! -d $destination ]; then
+	mkdir -p $destination
+fi
+
 destination=`cd $destination; pwd`; #Absolute path.
 
 cd $pwd

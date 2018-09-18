@@ -1,4 +1,5 @@
 svn-sync/*
 bare-git/*
+*-merge-git/*
 repositories*.txt
 authors-*.txt
