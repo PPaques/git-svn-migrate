@@ -133,7 +133,7 @@ fi
 # Process each URL in the repository list.
 pwd=`pwd`;
 tmp_destination="$pwd/tmp-merge-repo";
-destination=$pwd/$destination; #Absolute path.
+destination=`cd $destination; pwd`; #Absolute path.
 
 # now create a new repository and import all changes
 echo "Creating destination repository"
