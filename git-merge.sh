@@ -133,6 +133,11 @@ fi
 # Process each URL in the repository list.
 pwd=`pwd`;
 tmp_destination="$pwd/tmp-merge-repo";
+
+
+if [ ! -d $destination ]; then
+	mkdir -p $destination
+fi
 destination=`cd $destination; pwd`; #Absolute path.
 
 # now create a new repository and import all changes
@@ -142,7 +147,6 @@ if [[ -e $destination ]]; then
 	rm -rf $destination
 fi
 
-mkdir -p $destination;
 echo "init the new final repository"
 cd $destination
 git init
