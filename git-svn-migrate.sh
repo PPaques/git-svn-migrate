@@ -88,79 +88,79 @@ gitsvn_params='';
 
 # Process parameters.
 until [[ -z "$1" ]]; do
-  option=$1;
-  # Strip off leading '--' or '-'.
-  if [[ ${option:0:1} == '-' ]]; then
-    flag_delimiter='-';
-    if [[ ${option:0:2} == '--' ]]; then
-      tmp=${option:2};
-      flag_delimiter='--';
-    else
-      tmp=${option:1};
-    fi
-  else
-    # Any argument given is assumed to be the destination folder.
-    tmp="destination=$option";
-  fi
-  parameter=${tmp%%=*}; # Extract option's name.
-  value=${tmp##*=};     # Extract option's value.
-  # If a value is expected, but not specified inside the parameter, grab the next param.
-  if [[ $value == $tmp ]]; then
-    if [[ ${2:0:1} == '-' ]]; then
-      # The next parameter is a new option, so unset the value.
-      value='';
-    else
-      value=$2;
-      shift;
-    fi
-  fi
+	option=$1;
+	# Strip off leading '--' or '-'.
+	if [[ ${option:0:1} == '-' ]]; then
+		flag_delimiter='-';
+		if [[ ${option:0:2} == '--' ]]; then
+			tmp=${option:2};
+			flag_delimiter='--';
+		else
+			tmp=${option:1};
+		fi
+	else
+		# Any argument given is assumed to be the destination folder.
+		tmp="destination=$option";
+	fi
+	parameter=${tmp%%=*}; # Extract option's name.
+	value=${tmp##*=};     # Extract option's value.
+	# If a value is expected, but not specified inside the parameter, grab the next param.
+	if [[ $value == $tmp ]]; then
+		if [[ ${2:0:1} == '-' ]]; then
+			# The next parameter is a new option, so unset the value.
+			value='';
+		else
+			value=$2;
+			shift;
+		fi
+	fi
 
-  case $parameter in
-    u )               url_file=$value;;
-    url-file )        url_file=$value;;
-    a )               authors_file=$value;;
-    authors-file )    authors_file=$value;;
-    d )               destination=$value;;
-    destination )     destination=$value;;
-    i )               ignore_file=$value;;
-    ignore-file )     ignore_file=$value;;
-    shared )          if [[ $value == '' ]]; then
-                        gitinit_params="--shared";
-                      else
-                        gitinit_params="--shared=$value";
-                      fi
-                      ;;
+	case $parameter in
+		u )               url_file=$value;;
+		url-file )        url_file=$value;;
+		a )               authors_file=$value;;
+		authors-file )    authors_file=$value;;
+		d )               destination=$value;;
+		destination )     destination=$value;;
+		i )               ignore_file=$value;;
+		ignore-file )     ignore_file=$value;;
+		shared )          if [[ $value == '' ]]; then
+												gitinit_params="--shared";
+											else
+												gitinit_params="--shared=$value";
+											fi
+											;;
 
-    h )               echo -e $help | less >&2; exit;;
-    help )            echo -e $help | less >&2; exit;;
+		h )               echo -e $help | less >&2; exit;;
+		help )            echo -e $help | less >&2; exit;;
 
-    * ) # Pass any unknown parameters to git-svn directly.
-        if [[ $value == '' ]]; then
-          gitsvn_params="$gitsvn_params $flag_delimiter$parameter";
-        else
-          gitsvn_params="$gitsvn_params $flag_delimiter$parameter=$value";
-        fi;;
-  esac
+		* ) # Pass any unknown parameters to git-svn directly.
+				if [[ $value == '' ]]; then
+					gitsvn_params="$gitsvn_params $flag_delimiter$parameter";
+				else
+					gitsvn_params="$gitsvn_params $flag_delimiter$parameter=$value";
+				fi;;
+	esac
 
-  # Remove the processed parameter.
-  shift;
+	# Remove the processed parameter.
+	shift;
 done
 
 # Check for required parameters.
 if [[ $url_file == '' || $authors_file == '' ]]; then
-  echo -e $usage >&2;
-  exit 1;
+	echo -e $usage >&2;
+	exit 1;
 fi
 # Check for valid files.
 if [[ ! -f $url_file ]]; then
-  echo "Specified URL file \"$url_file\" does not exist or is not a file." >&2;
-  echo -e $usage >&2;
-  exit 1;
+	echo "Specified URL file \"$url_file\" does not exist or is not a file." >&2;
+	echo -e $usage >&2;
+	exit 1;
 fi
 if [[ ! -f $authors_file ]]; then
-  echo "Specified authors file \"$authors_file\" does not exist or is not a file." >&2;
-  echo -e $usage >&2;
-  exit 1;
+	echo "Specified authors file \"$authors_file\" does not exist or is not a file." >&2;
+	echo -e $usage >&2;
+	exit 1;
 fi
 
 
@@ -172,75 +172,75 @@ destination=`cd $destination; pwd`; #Absolute path.
 
 # Ensure temporary repository location is empty.
 if [[ -e $tmp_destination ]]; then
-  echo "Temporary repository location \"$tmp_destination\" already exists. Cleaning it." >&2;
-  rm -rf $tmp_destination
+	echo "Temporary repository location \"$tmp_destination\" already exists. Cleaning it." >&2;
+	rm -rf $tmp_destination
 fi
 sed -e 's/#.*//; /^[[:space:]]*$/d' $url_file | while read line
 do
-  # Check for 2-field format:  Name [tab] URL
-  url=`echo $line | awk '{print $1}'`;
-  name=`echo $line | awk '{print $2}'`;
-  extra_args=`echo $line | awk '{ORS=" "; for (y=4; y<=NF; y++) print $y}'`;
-  # Check for simple 1-field format:  URL
-  if [[ $name == '' ]]; then
-    name=`basename $url`;
-  fi
-  # Process each Subversion URL.
-  echo >&2;
-  echo "At $(date)..." >&2;
-  echo "Processing \"$name\" repository at $url..." >&2;
+	# Check for 2-field format:  Name [tab] URL
+	url=`echo $line | awk '{print $1}'`;
+	name=`echo $line | awk '{print $2}'`;
+	extra_args=`echo $line | awk '{ORS=" "; for (y=4; y<=NF; y++) print $y}'`;
+	# Check for simple 1-field format:  URL
+	if [[ $name == '' ]]; then
+		name=`basename $url`;
+	fi
+	# Process each Subversion URL.
+	echo >&2;
+	echo "At $(date)..." >&2;
+	echo "Processing \"$name\" repository at $url..." >&2;
 
-  # Init the final bare repository.
-  mkdir $destination/$name.git;
-  cd $destination/$name.git;
-  git init --bare $gitinit_params;
-  git symbolic-ref HEAD refs/heads/trunk;
+	# Init the final bare repository.
+	mkdir $destination/$name.git;
+	cd $destination/$name.git;
+	git init --bare $gitinit_params;
+	git symbolic-ref HEAD refs/heads/trunk;
 
-  # Clone the original Subversion repository to a temp repository.
-  cd $pwd;
-  echo "- Cloning repository..." >&2;
-  git svn clone $url -A $authors_file --authors-prog=$dir/svn-lookup-author.sh $gitsvn_params $extra_args $tmp_destination;
+	# Clone the original Subversion repository to a temp repository.
+	cd $pwd;
+	echo "- Cloning repository..." >&2;
+	git svn clone $url -A $authors_file --authors-prog=$dir/svn-lookup-author.sh $gitsvn_params $extra_args $tmp_destination;
 
-  # Create .gitignore file.
-  echo "- Converting svn:ignore properties into a .gitignore file..." >&2;
-  if [[ $ignore_file != '' ]]; then
-    cp $ignore_file $tmp_destination/.gitignore;
-  fi
-  cd $tmp_destination;
-  git svn show-ignore --id trunk >> .gitignore;
-  if [ -s .gitignore ]; then
-    git add .gitignore;
-    git commit -m 'Convert svn:ignore properties to .gitignore.';
-  fi
+	# Create .gitignore file.
+	echo "- Converting svn:ignore properties into a .gitignore file..." >&2;
+	if [[ $ignore_file != '' ]]; then
+		cp $ignore_file $tmp_destination/.gitignore;
+	fi
+	cd $tmp_destination;
+	git svn show-ignore --id trunk >> .gitignore;
+	if [ -s .gitignore ]; then
+		git add .gitignore;
+		git commit -m 'Convert svn:ignore properties to .gitignore.';
+	fi
 
-  # Push to final bare repository and remove temp repository.
-  echo "- Pushing to new bare repository..." >&2;
-  git remote add bare $destination/$name.git;
-  git config remote.bare.push 'refs/remotes/*:refs/heads/*';
-  git push bare;
-  # Push the .gitignore commit that resides on master.
-  git push bare master:trunk;
-  cd $pwd;
-  rm -r $tmp_destination;
+	# Push to final bare repository and remove temp repository.
+	echo "- Pushing to new bare repository..." >&2;
+	git remote add bare $destination/$name.git;
+	git config remote.bare.push 'refs/remotes/*:refs/heads/*';
+	git push bare;
+	# Push the .gitignore commit that resides on master.
+	git push bare master:trunk;
+	cd $pwd;
+	rm -r $tmp_destination;
 
-  # Rename Subversion's "trunk" branch to Git's standard "master" branch.
-  cd $destination/$name.git;
-  git branch -M trunk master;
+	# Rename Subversion's "trunk" branch to Git's standard "master" branch.
+	cd $destination/$name.git;
+	git branch -M trunk master;
 
-  # Remove bogus branches of the form "name@REV".
-  git for-each-ref --format='%(refname)' refs/heads | grep '@[0-9][0-9]*' | cut -d / -f 3- |
-  while read ref
-  do
-    git branch -D "$ref";
-  done
+	# Remove bogus branches of the form "name@REV".
+	git for-each-ref --format='%(refname)' refs/heads | grep '@[0-9][0-9]*' | cut -d / -f 3- |
+	while read ref
+	do
+		git branch -D "$ref";
+	done
 
-  # Convert git-svn tag branches to proper tags.
-  echo "- Converting svn tag directories to proper git tags..." >&2;
-  git for-each-ref --format='%(refname)' refs/heads/tags | cut -d / -f 4 |
-  while read ref
-  do
-    git tag -a "$ref" -m "Convert \"$ref\" to a proper git tag." "refs/heads/tags/$ref";
-    git branch -D "tags/$ref";
-  done
-  echo "- Conversion completed at $(date)." >&2;
+	# Convert git-svn tag branches to proper tags.
+	echo "- Converting svn tag directories to proper git tags..." >&2;
+	git for-each-ref --format='%(refname)' refs/heads/tags | cut -d / -f 4 |
+	while read ref
+	do
+		git tag -a "$ref" -m "Convert \"$ref\" to a proper git tag." "refs/heads/tags/$ref";
+		git branch -D "tags/$ref";
+	done
+	echo "- Conversion completed at $(date)." >&2;
 done
